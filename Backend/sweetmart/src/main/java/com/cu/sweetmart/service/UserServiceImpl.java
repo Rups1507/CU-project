@@ -4,78 +4,64 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.cu.sweetmart.exception.NoRecordsFoundException;
 import com.cu.sweetmart.model.User;
 import com.cu.sweetmart.repository.UserRepo;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Service
-@Slf4j
 public class UserServiceImpl implements UserService {
 
-	@Autowired
-	private UserRepo userRepo;
+    @Autowired
+    private UserRepo userRepo;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-	
-@Override
-public User addUser(User user) throws NoRecordsFoundException {
-    try {
+    @Override
+    public User addUser(User user) {
         if (user == null) {
-            throw new NoRecordsFoundException("User should not be null");
-        }else {
-        User savedUser = userRepo.save(user);
-        return savedUser;
-    }
-    }catch (Exception e) {
-        throw new NoRecordsFoundException("Failed to add user");
-    }
+            throw new NoRecordsFoundException("User must not be null");
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepo.save(user);
     }
 
+    @Override
+    public User updateUser(User user) {
+        User existing = userRepo.findById(user.getUserId())
+                .orElseThrow(() -> new NoRecordsFoundException("User not found with id: " + user.getUserId()));
 
-
-@Override
-public User updateUser(User user) throws NoRecordsFoundException{
-//    Optional<User> optionalUser = userRepo.findById(user.getUserId());
-//    if (optionalUser.isPresent()) {
-//        User existingUser = optionalUser.get();
-//        existingUser.setFirstName(user.getFirstName());
-//        existingUser.setFirstName(user.getFirstName());
-//        existingUser.setEmail(user.getEmail());
-//        return userRepo.save(existingUser);
-//    } else {
-//        throw new NoRecordsFoundException("User not found");
-//    }
-	
-	return null;
-}
-
-
-	@Override
-	public User cancelUser(Integer userId) throws NoRecordsFoundException {
-		Optional<User> op = userRepo.findById(userId);
-		if(op.isPresent()) {
-			userRepo.deleteById(userId);
-			return op.get();
-		}
-		else {
-			throw new NoRecordsFoundException("No userRepo available with userId: "+ userId);
-		}
-	}
-
-	@Override
-public List<User> showAllUser()throws NoRecordsFoundException {
-    List<User> allUser = userRepo.findAll();
-    if (!allUser.isEmpty()) {
-        return allUser;
-    } else {
-        throw new NoRecordsFoundException("User Not Found");
+        existing.setUsername(user.getUsername());
+        if (user.getPassword() != null && !user.getPassword().startsWith("$2a$")) {
+            existing.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+        return userRepo.save(existing);
     }
-}
 
+    @Override
+    public User cancelUser(Integer userId) {
+        User user = userRepo.findById(userId)
+                .orElseThrow(() -> new NoRecordsFoundException("User not found with id: " + userId));
+        userRepo.deleteById(userId);
+        return user;
+    }
 
-	
+    @Override
+    public List<User> showAllUser() {
+        List<User> users = userRepo.findAll();
+        if (users.isEmpty()) {
+            throw new NoRecordsFoundException("No users found");
+        }
+        return users;
+    }
+
+    @Override
+    public boolean authenticate(String username, String password) {
+        Optional<User> userOpt = userRepo.findByUsername(username);
+        return userOpt.map(u -> passwordEncoder.matches(password, u.getPassword()))
+                      .orElse(false);
+    }
 }

@@ -5,15 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.cu.sweetmart.exception.NoRecordsFoundException;
 import com.cu.sweetmart.model.OrderBill;
 import com.cu.sweetmart.service.OrderBillService;
 
@@ -22,42 +15,30 @@ import com.cu.sweetmart.service.OrderBillService;
 public class OrderBillController {
 
     @Autowired
-    private OrderBillService orderService;
-
+    private OrderBillService orderBillService;
 
     @PostMapping("/add")
     public ResponseEntity<OrderBill> addOrderBill(@RequestBody OrderBill orderBill) {
-    	OrderBill order = orderService.addOrderBill(orderBill); 
-            return new ResponseEntity<OrderBill>(order, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(orderBillService.addOrderBill(orderBill), HttpStatus.CREATED);
     }
 
-	
-	   @GetMapping("/update")
-	    public ResponseEntity<OrderBill> updateOrderBill(@RequestBody OrderBill orderBill) throws NoRecordsFoundException{
-	        return new ResponseEntity<>(orderService.updateOrderBill(orderBill),HttpStatus.OK);
-
-	    }
+    @PutMapping("/update")
+    public ResponseEntity<OrderBill> updateOrderBill(@RequestBody OrderBill orderBill) {
+        return new ResponseEntity<>(orderBillService.updateOrderBill(orderBill), HttpStatus.OK);
+    }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<OrderBill> deleteOrderBill(@PathVariable("id") Integer id) throws NoRecordsFoundException{
-        return new ResponseEntity<>(orderService.cancelOrderBill(id),HttpStatus.OK);
-
+    public ResponseEntity<OrderBill> deleteOrderBill(@PathVariable("id") Integer id) {
+        return new ResponseEntity<>(orderBillService.cancelOrderBill(id), HttpStatus.OK);
     }
 
-
- 
-
-
-    @GetMapping("/bills/allbills")
-    public ResponseEntity<List<OrderBill>> showAllOrders() throws NoRecordsFoundException{
-        return new ResponseEntity<>(orderService.showAllOrderBill(),HttpStatus.OK);
-
+    @GetMapping("/all")
+    public ResponseEntity<List<OrderBill>> getAllOrderBills() {
+        return new ResponseEntity<>(orderBillService.showAllOrderBill(), HttpStatus.OK);
     }
 
-    @GetMapping("/orderbill/{billid}")
-    public ResponseEntity<OrderBill> showAllOrderBill(@PathVariable("billid") Integer orderBillId) throws NoRecordsFoundException {
-    	OrderBill p = orderService.showAllOrderBill(orderBillId);
-		
-		return new ResponseEntity<>(p, HttpStatus.OK);
-	}
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderBill> getOrderBillById(@PathVariable("id") Integer id) {
+        return new ResponseEntity<>(orderBillService.getOrderBillById(id), HttpStatus.OK);
     }
+}

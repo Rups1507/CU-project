@@ -1,86 +1,93 @@
 package com.cu.sweetmart.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cu.sweetmart.exception.NoRecordsFoundException;
+import com.cu.sweetmart.model.Category;
 import com.cu.sweetmart.model.Product;
+import com.cu.sweetmart.repository.CategoryRepo;
 import com.cu.sweetmart.repository.ProductRepo;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Service
-@Slf4j
 public class ProductServiceImpl implements ProductService {
 
-	@Autowired
-	private ProductRepo productRepo;
-	
-	
-@Override
-public Product addProduct(Product product) throws NoRecordsFoundException {
-	productRepo.save(product);
-	return product;
-  
-}
-
-
-@Override
-public Product updateProduct(Product product) throws NoRecordsFoundException {
-	Optional<Product> op = productRepo.findById(product.getProductid());
-	if(op.isPresent()) {
-		productRepo.save(product);
-		return product;
-	}
-	else {
-		throw new NoRecordsFoundException("No Product available with productId: "+product.getProductid());
-	}
-	
-}
-
-
-
-
-@Override
-public Product cancelProduct(Integer productId) throws NoRecordsFoundException {
-	Optional<Product> op = productRepo.findById(productId);
-	if(op.isPresent()) {
-		productRepo.deleteById(productId);
-		return op.get();
-	}
-	else {
-		throw new NoRecordsFoundException("No Product available with productId: "+ productId);
-	}
-}
-
-
-@Override
-public List<Product> showAllProduct() throws NoRecordsFoundException {
-    List<Product> products = productRepo.findAll();
+    @Autowired
+    private ProductRepo productRepo;
     
-    if (products.isEmpty()) {
-        throw new NoRecordsFoundException("No products found!");
+    @Autowired
+    private CategoryRepo categoryRepo;
+
+    @Override
+    public Product addProduct(Product product) {
+    	
+        if (product.getCategory() != null && product.getCategory().getCategoryId() != null) {
+            Integer catId = product.getCategory().getCategoryId();
+            
+            Category managedCategory = categoryRepo.findById(catId)
+                .orElseThrow(() -> new NoRecordsFoundException("Category not found with ID: " + catId));
+            
+            product.setCategory(managedCategory);
+        }
+        return productRepo.save(product);
     }
-    
-    return products;
-}
 
+    @Override
+    public Product updateProduct(Product product) {
+        productRepo.findById(product.getProductId())
+                .orElseThrow(() -> new NoRecordsFoundException("Product not found with id: " + product.getProductId()));
+        return productRepo.save(product);
+    }
 
+    @Override
+    public Product cancelProduct(Integer productId) {
+        Product product = productRepo.findById(productId)
+                .orElseThrow(() -> new NoRecordsFoundException("Product not found with id: " + productId));
+        productRepo.deleteById(productId);
+        return product;
+    }
 
+    @Override
+    public List<Product> showAllProducts() {
+        List<Product> products = productRepo.findAll();
+        if (products.isEmpty()) {
+            throw new NoRecordsFoundException("No products found");
+        }
+        return products;
+    }
 
-public Product showAllProduct(Integer productId) throws NoRecordsFoundException  {
+    @Override
+    public Product getProductById(Integer productId) {
+        return productRepo.findById(productId)
+                .orElseThrow(() -> new NoRecordsFoundException("Product not found with id: " + productId));
+    }
 
-	Optional<Product> opt = productRepo.findById(productId);
-	if(opt.isPresent()) {
-		return opt.get();
-	} else {
-		throw new NoRecordsFoundException("Product not found!");
-	}
-	
+    @Override
+    public List<Product> searchProductByName(String name) {
+        List<Product> products = productRepo.findByNameContainingIgnoreCase(name);
+        if (products.isEmpty()) {
+            throw new NoRecordsFoundException("No products match your search: " + name);
+        }
+        return products;
+    }
 
-}
+    @Override
+    public List<Product> getAvailableProducts() {
+        List<Product> products = productRepo.findByAvailableTrue();
+        if (products.isEmpty()) {
+            throw new NoRecordsFoundException("No available products found");
+        }
+        return products;
+    }
 
+    @Override
+    public List<Product> getProductsByCategory(Integer categoryId) {
+        List<Product> products = productRepo.findByCategoryId(categoryId);
+        if (products.isEmpty()) {
+            throw new NoRecordsFoundException("No products found for category id: " + categoryId);
+        }
+        return products;
+    }
 }

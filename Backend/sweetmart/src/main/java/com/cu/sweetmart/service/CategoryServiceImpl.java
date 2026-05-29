@@ -1,7 +1,6 @@
 package com.cu.sweetmart.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,59 +11,36 @@ import com.cu.sweetmart.repository.CategoryRepo;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
-	
-	@Autowired
-	private CategoryRepo categoryRepo;
-	
-	
-	@Override
-	public Category addCategory(Category category) {
-		categoryRepo.save(category);
-		return category;
-	}
 
-	@Override
-	public Category updateCategory(Category category) throws NoRecordsFoundException {
-		Optional<Category> op = categoryRepo.findById(category.getCategoryid());
-		
-		if(op.isPresent()) {
-			categoryRepo.save(category);
-			return category;
-		}
-		else {
-			throw new NoRecordsFoundException("No Category with id: " +category.getCategoryid() );
-		}
-		
-	}
+    @Autowired
+    private CategoryRepo categoryRepo;
 
-	@Override
-	public Category cancelCategory(Integer categoryId) throws NoRecordsFoundException {
-		Optional<Category> op = categoryRepo.findById(categoryId);
-		
-		if(op.isPresent()) {
-			categoryRepo.deleteById(categoryId);;
-			return op.get();
-		}
-		else {
-			throw new NoRecordsFoundException("No Category with id: " +categoryId );
-		}
-	}
+    @Override
+    public Category addCategory(Category category) {
+        return categoryRepo.save(category);
+    }
 
-	@Override
-	public List<Category> showAllCategory() throws NoRecordsFoundException {
-		List<Category> category = categoryRepo.findAll();
-		if(!category.isEmpty()) {
-			return category;
-		}
-		else {
-			throw new NoRecordsFoundException("No Category found" );
-		}
-	}
+    @Override
+    public Category updateCategory(Category category) {
+        categoryRepo.findById(category.getCategoryId())
+                .orElseThrow(() -> new NoRecordsFoundException("Category not found with id: " + category.getCategoryId()));
+        return categoryRepo.save(category);
+    }
 
-	@Override
-	public Double calculateTotalCost(Integer categoryId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Category cancelCategory(Integer categoryId) {
+        Category category = categoryRepo.findById(categoryId)
+                .orElseThrow(() -> new NoRecordsFoundException("Category not found with id: " + categoryId));
+        categoryRepo.deleteById(categoryId);
+        return category;
+    }
 
+    @Override
+    public List<Category> showAllCategory() {
+        List<Category> categories = categoryRepo.findAll();
+        if (categories.isEmpty()) {
+            throw new NoRecordsFoundException("No categories found");
+        }
+        return categories;
+    }
 }

@@ -1,7 +1,6 @@
 package com.cu.sweetmart.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,54 +11,42 @@ import com.cu.sweetmart.repository.OrderBillRepo;
 
 @Service
 public class OrderBillServiceImpl implements OrderBillService {
-	
-	@Autowired
-	private OrderBillRepo orderBillRepo;	
-	
-	@Override
-	public OrderBill addOrderBill(OrderBill orderBill) {
-		orderBillRepo.save(orderBill);
-		return orderBill;
-	}
 
-	@Override
-	public OrderBill updateOrderBill(OrderBill orderBill) throws NoRecordsFoundException {
-		Optional<OrderBill> op = orderBillRepo.findById(orderBill.getOrderBillId());
-		if(op.isPresent()) {
-			orderBillRepo.save(orderBill);
-			return op.get();
-		}
-		throw new NoRecordsFoundException("No Order Bill found with orderBillId: " + orderBill.getOrderBillId());
-	}
+    @Autowired
+    private OrderBillRepo orderBillRepo;
 
-	@Override
-	public OrderBill cancelOrderBill(Integer orderBillId) throws NoRecordsFoundException {
-		Optional<OrderBill> op = orderBillRepo.findById(orderBillId);
-		if(op.isPresent()) {
-			orderBillRepo.deleteById(orderBillId);
-			return op.get();
-		}
-		throw new NoRecordsFoundException("No Order Bill found with orderBillId: " + orderBillId);
-	}
+    @Override
+    public OrderBill addOrderBill(OrderBill orderBill) {
+        return orderBillRepo.save(orderBill);
+    }
 
-	@Override
-	public List<OrderBill> showAllOrderBill() throws NoRecordsFoundException {
-		List<OrderBill> orderBill = orderBillRepo.findAll();
-		if(!orderBill.isEmpty()) {
-			return orderBill;
-		}
-		throw new NoRecordsFoundException("No Order Bill found ");
-	}
+    @Override
+    public OrderBill updateOrderBill(OrderBill orderBill) {
+        orderBillRepo.findById(orderBill.getOrderBillId())
+                .orElseThrow(() -> new NoRecordsFoundException("OrderBill not found with id: " + orderBill.getOrderBillId()));
+        return orderBillRepo.save(orderBill);
+    }
 
-	@Override
-	public OrderBill showAllOrderBill(Integer orderBillId) throws NoRecordsFoundException {
-		Optional<OrderBill> opt = orderBillRepo.findById(orderBillId);
-		if(opt.isPresent()) {
-			return opt.get();
-		} else {
-			throw new NoRecordsFoundException("OrderBill not found!");
-		}
+    @Override
+    public OrderBill cancelOrderBill(Integer orderBillId) {
+        OrderBill bill = orderBillRepo.findById(orderBillId)
+                .orElseThrow(() -> new NoRecordsFoundException("OrderBill not found with id: " + orderBillId));
+        orderBillRepo.deleteById(orderBillId);
+        return bill;
+    }
 
-}
-	
+    @Override
+    public List<OrderBill> showAllOrderBill() {
+        List<OrderBill> bills = orderBillRepo.findAll();
+        if (bills.isEmpty()) {
+            throw new NoRecordsFoundException("No order bills found");
+        }
+        return bills;
+    }
+
+    @Override
+    public OrderBill getOrderBillById(Integer orderBillId) {
+        return orderBillRepo.findById(orderBillId)
+                .orElseThrow(() -> new NoRecordsFoundException("OrderBill not found with id: " + orderBillId));
+    }
 }

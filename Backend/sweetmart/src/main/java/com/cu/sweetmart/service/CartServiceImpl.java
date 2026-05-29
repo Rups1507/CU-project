@@ -1,73 +1,77 @@
 package com.cu.sweetmart.service;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cu.sweetmart.exception.NoRecordsFoundException;
 import com.cu.sweetmart.model.Cart;
+import com.cu.sweetmart.model.Product;
 import com.cu.sweetmart.repository.CartRepo;
+import com.cu.sweetmart.repository.ProductRepo;
 
 @Service
 public class CartServiceImpl implements CartService {
-	
-	@Autowired
-	private CartRepo cartRepo;
-	
-	@Override
-	public Cart addCart(Cart cart) {
-		cartRepo.save(cart);
-		return cart;
-	}
 
-	@Override
-	public Cart updateCart(Cart cart) throws NoRecordsFoundException {
-		Optional<Cart> op = cartRepo.findById(cart.getCartId());
-		if(op.isPresent()) {
-			cartRepo.save(cart);
-			return cart;
-		}
-		else {
-			throw new NoRecordsFoundException("No Cart available with cartId: "+cart.getCartId());
-		}
-		
-	}
+    @Autowired
+    private CartRepo cartRepo;
 
-	@Override
-	public Cart cancelCart(Integer cartId) throws NoRecordsFoundException {
-		Optional<Cart> op = cartRepo.findById(cartId);
-		if(op.isPresent()) {
-			cartRepo.deleteById(cartId);
-			return op.get();
-		}
-		else {
-			throw new NoRecordsFoundException("No Cart available with cartId: "+ cartId);
-		}
-	}
+    @Autowired
+    private ProductRepo productRepo;
 
-	@Override
-	public List<Cart> showAllCart() throws NoRecordsFoundException {
-		List<Cart> cart = cartRepo.findAll();
-		if(!cart.isEmpty())
-			return cart;
-		throw new NoRecordsFoundException("No Cart available");
-	}
+    @Override
+    public Cart addCart(Cart cart) {
+        return cartRepo.save(cart);
+    }
 
-	@Override
-	public List<Cart> showAllCart(Integer cartId) throws NoRecordsFoundException {
-		Optional<Cart> op = cartRepo.findById(cartId);
-		if(op.isPresent()) {
-			List<Cart> list = null;
-			 list.add(op.get());
-			 return list;
-		}
-		else {
-			throw new NoRecordsFoundException("No Cart availabe with cartId: "+ cartId);
-		}
-		
-	
-	}
+    @Override
+    public Cart updateCart(Cart cart) {
+        cartRepo.findById(cart.getCartId())
+                .orElseThrow(() -> new NoRecordsFoundException("Cart not found with id: " + cart.getCartId()));
+        recalculateTotal(cart);
+        return cartRepo.save(cart);
+    }
 
+    @Override
+    public Cart getCartById(Integer cartId) {
+        return cartRepo.findById(cartId)
+                .orElseThrow(() -> new NoRecordsFoundException("Cart not found with id: " + cartId));
+    }
+
+    @Override
+    public Cart cancelCart(Integer cartId) {
+        Cart cart = cartRepo.findById(cartId)
+                .orElseThrow(() -> new NoRecordsFoundException("Cart not found with id: " + cartId));
+        cartRepo.deleteById(cartId);
+        return cart;
+    }
+
+    @Override
+    public Cart addProductToCart(Integer cartId, Integer productId) {
+        Cart cart = getCartById(cartId);
+        Product product = productRepo.findById(productId)
+                .orElseThrow(() -> new NoRecordsFoundException("Product not found with id: " + productId));
+
+        if (!Boolean.TRUE.equals(product.getAvailable())) {
+            throw new NoRecordsFoundException("Product '" + product.getName() + "' is currently unavailable");
+        }
+
+        cart.getProducts().add(product);
+        recalculateTotal(cart);
+        return cartRepo.save(cart);
+    }
+
+    @Override
+    public Cart removeProductFromCart(Integer cartId, Integer productId) {
+        Cart cart = getCartById(cartId);
+        cart.getProducts().removeIf(p -> p.getProductId().equals(productId));
+        recalculateTotal(cart);
+        return cartRepo.save(cart);
+    }
+
+    private void recalculateTotal(Cart cart) {
+        double total = cart.getProducts().stream()
+                .mapToDouble(p -> p.getPrice() != null ? p.getPrice() : 0.0)
+                .sum();
+        cart.setGrandTotal(total);
+    }
 }
