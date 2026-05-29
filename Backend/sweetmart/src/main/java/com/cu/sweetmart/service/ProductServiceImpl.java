@@ -38,6 +38,14 @@ public class ProductServiceImpl implements ProductService {
     public Product updateProduct(Product product) {
         productRepo.findById(product.getProductId())
                 .orElseThrow(() -> new NoRecordsFoundException("Product not found with id: " + product.getProductId()));
+        
+        if (product.getCategory() != null && product.getCategory().getCategoryId() != null) {
+            Integer catId = product.getCategory().getCategoryId();
+            Category category = categoryRepo.findById(catId)
+                .orElseThrow(() -> new NoRecordsFoundException("Category not found with ID: " + catId));
+            product.setCategory(category);
+        }
+        
         return productRepo.save(product);
     }
 

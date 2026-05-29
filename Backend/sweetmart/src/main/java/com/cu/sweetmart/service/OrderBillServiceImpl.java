@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cu.sweetmart.exception.NoRecordsFoundException;
+import com.cu.sweetmart.model.Customer;
 import com.cu.sweetmart.model.OrderBill;
+import com.cu.sweetmart.repository.CustomerRepo;
 import com.cu.sweetmart.repository.OrderBillRepo;
 
 @Service
@@ -14,9 +16,19 @@ public class OrderBillServiceImpl implements OrderBillService {
 
     @Autowired
     private OrderBillRepo orderBillRepo;
+    
+    @Autowired
+    private CustomerRepo customerRepo;
 
     @Override
     public OrderBill addOrderBill(OrderBill orderBill) {
+    	if (orderBill.getCustomer() != null && orderBill.getCustomer().getUserId() != null) {
+            Integer customerId = orderBill.getCustomer().getUserId();
+            Customer cust = customerRepo.findById(customerId)
+                .orElseThrow(() -> new NoRecordsFoundException(
+                    "Customer not found with id: " + customerId));
+            orderBill.setCustomer(cust);
+        }
         return orderBillRepo.save(orderBill);
     }
 
@@ -24,6 +36,15 @@ public class OrderBillServiceImpl implements OrderBillService {
     public OrderBill updateOrderBill(OrderBill orderBill) {
         orderBillRepo.findById(orderBill.getOrderBillId())
                 .orElseThrow(() -> new NoRecordsFoundException("OrderBill not found with id: " + orderBill.getOrderBillId()));
+        
+        if (orderBill.getCustomer() != null && orderBill.getCustomer().getUserId() != null) {
+            Integer customerId = orderBill.getCustomer().getUserId();
+            Customer cust = customerRepo.findById(customerId)
+                .orElseThrow(() -> new NoRecordsFoundException(
+                    "Customer not found with id: " + customerId));
+            orderBill.setCustomer(cust);
+        }
+        
         return orderBillRepo.save(orderBill);
     }
 

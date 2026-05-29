@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cu.sweetmart.exception.NoRecordsFoundException;
+import com.cu.sweetmart.model.Customer;
 import com.cu.sweetmart.model.SweetOrder;
+import com.cu.sweetmart.repository.CustomerRepo;
 import com.cu.sweetmart.repository.SweetOrderRepo;
 
 @Service
@@ -14,9 +16,18 @@ public class SweetOrderServiceImpl implements SweetOrderService {
 
     @Autowired
     private SweetOrderRepo sweetOrderRepo;
+    
+    @Autowired
+    private CustomerRepo customerRepo;
 
     @Override
     public SweetOrder addSweetOrder(SweetOrder sweetOrder) {
+    	if (sweetOrder.getCustomer() != null && sweetOrder.getCustomer().getUserId() != null) {
+            Customer cust = customerRepo.findById(sweetOrder.getCustomer().getUserId())
+                .orElseThrow(() -> new NoRecordsFoundException(
+                    "Customer not found with id: " + sweetOrder.getCustomer().getUserId()));
+            sweetOrder.setCustomer(cust);
+        }
         return sweetOrderRepo.save(sweetOrder);
     }
 
@@ -24,6 +35,15 @@ public class SweetOrderServiceImpl implements SweetOrderService {
     public SweetOrder updateSweetOrder(SweetOrder sweetOrder) {
         sweetOrderRepo.findById(sweetOrder.getSweetOrderId())
                 .orElseThrow(() -> new NoRecordsFoundException("Order not found with id: " + sweetOrder.getSweetOrderId()));
+        
+        if (sweetOrder.getCustomer() != null && sweetOrder.getCustomer().getUserId() != null) {
+            Integer customerId = sweetOrder.getCustomer().getUserId();
+            Customer cust = customerRepo.findById(customerId)
+                .orElseThrow(() -> new NoRecordsFoundException(
+                    "Customer not found with id: " + customerId));
+            sweetOrder.setCustomer(cust);
+        }
+        
         return sweetOrderRepo.save(sweetOrder);
     }
 
