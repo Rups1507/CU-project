@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — SweetMart</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="site-logo">Sweet<span>Mart</span></a>
+      <nav class="nav-links">
+        <a href="../index.html">Shop</a>
+        <a href="orders.html">My Orders</a>
+      </nav>
+      <div class="header-right">
+        <a href="cart.html" class="cart-link">
+          &#128722; Cart <span class="cart-badge" id="cart-badge"></span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Auth Form -->
+  <main>
+    <div class="auth-container">
+      <div class="auth-card">
+        <!-- Tabs -->
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-tab="login">Sign In</button>
+          <button class="auth-tab" data-tab="register">Create Account</button>
+        </div>
+
+        <!-- Login Form -->
+        <form class="auth-form active" id="login-form" novalidate>
+          <div class="form-group">
+            <label for="login-username">Username</label>
+            <input type="text" id="login-username" class="form-control" placeholder="Enter your username" required>
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" class="form-control" placeholder="Enter your password" required>
+          </div>
+          <div id="login-error" class="form-error"></div>
+          <button type="submit" class="btn btn-primary btn-block btn-lg" id="login-btn">Sign In</button>
+        </form>
+
+        <!-- Register Form -->
+        <form class="auth-form" id="register-form" novalidate>
+          <div class="form-group">
+            <label for="reg-username">Username</label>
+            <input type="text" id="reg-username" class="form-control" placeholder="Choose a username" required>
+          </div>
+          <div class="form-group">
+            <label for="reg-password">Password</label>
+            <input type="password" id="reg-password" class="form-control" placeholder="Min 6 characters" required>
+          </div>
+          <div class="form-group">
+            <label for="reg-address">Delivery Address</label>
+            <textarea id="reg-address" class="form-control" rows="3" placeholder="Enter your full address" required></textarea>
+          </div>
+          <div id="register-error" class="form-error"></div>
+          <button type="submit" class="btn btn-primary btn-block btn-lg" id="register-btn">Create Account</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">Sweet<span>Mart</span></div>
+      <div class="footer-links">
+        <a href="../index.html">Shop</a>
+        <a href="cart.html">Cart</a>
+        <a href="orders.html">Orders</a>
+      </div>
+      <div class="footer-copy">&copy; 2025 SweetMart. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="../assets/js/login.js"></script>
+</body>
+</html>

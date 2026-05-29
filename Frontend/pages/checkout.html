@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout — SweetMart</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="site-logo">Sweet<span>Mart</span></a>
+      <nav class="nav-links">
+        <a href="../index.html">Shop</a>
+        <a href="orders.html">My Orders</a>
+      </nav>
+      <div class="header-right">
+        <span class="user-greeting" id="user-greeting"></span>
+        <a href="cart.html" class="cart-link">
+          &#128722; Cart <span class="cart-badge" id="cart-badge"></span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <div class="container">
+      <div class="page-header">
+        <h1>Checkout</h1>
+        <p>Review your order and complete the purchase</p>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="checkout-layout">
+        <div>
+          <!-- Shipping Section -->
+          <section class="checkout-section">
+            <h3>Shipping Address</h3>
+            <form id="checkout-form" novalidate>
+              <div class="form-group">
+                <label for="ship-name">Full Name</label>
+                <input type="text" id="ship-name" class="form-control" placeholder="Your full name" required>
+              </div>
+              <div class="form-group">
+                <label for="ship-address">Address</label>
+                <textarea id="ship-address" class="form-control" rows="3" placeholder="Street address, city, state, PIN" required></textarea>
+              </div>
+              <div class="form-group">
+                <label for="ship-phone">Phone Number</label>
+                <input type="tel" id="ship-phone" class="form-control" placeholder="10-digit mobile number" required>
+              </div>
+            </form>
+          </section>
+
+          <!-- Payment Section -->
+          <section class="checkout-section">
+            <h3>Payment Method</h3>
+            <div class="payment-options">
+              <div class="payment-option">
+                <input type="radio" name="payment" id="pay-cod" value="cod" checked>
+                <label for="pay-cod">Cash on Delivery</label>
+              </div>
+              <div class="payment-option">
+                <input type="radio" name="payment" id="pay-online" value="online">
+                <label for="pay-online">Online Payment (Razorpay)</label>
+              </div>
+            </div>
+          </section>
+
+          <div id="checkout-error" class="form-error mb-2"></div>
+
+          <button type="button" class="btn btn-primary btn-lg btn-block" id="place-order-btn">
+            Place Order
+          </button>
+        </div>
+
+        <!-- Order Summary -->
+        <aside class="cart-summary">
+          <h3>Order Summary</h3>
+          <div id="checkout-items"></div>
+          <div class="summary-row total">
+            <span>Total</span>
+            <span id="checkout-total">&#8377;0</span>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">Sweet<span>Mart</span></div>
+      <div class="footer-links">
+        <a href="../index.html">Shop</a>
+        <a href="cart.html">Cart</a>
+        <a href="orders.html">Orders</a>
+      </div>
+      <div class="footer-copy">&copy; 2025 SweetMart. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="../assets/js/checkout.js"></script>
+</body>
+</html>

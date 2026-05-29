@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel — SweetMart</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="site-logo">Sweet<span>Mart</span></a>
+      <nav class="nav-links">
+        <a href="../index.html">Shop</a>
+        <a href="admin.html" class="active">Admin Panel</a>
+      </nav>
+      <div class="header-right">
+        <span class="user-greeting" id="user-greeting"></span>
+        <a href="#" class="btn btn-sm btn-secondary" id="logout-btn">Sign Out</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <div class="container">
+      <div class="page-header">
+        <h1>Admin Panel</h1>
+        <p>Manage products and categories</p>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Tab Navigation -->
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="products">Products</button>
+        <button class="admin-tab" data-tab="categories">Categories</button>
+      </div>
+
+      <!-- Products Section -->
+      <section class="admin-section active" id="section-products">
+        <div class="admin-toolbar">
+          <h3>All Products</h3>
+          <button class="btn btn-primary btn-sm" id="btn-add-product">+ Add Product</button>
+        </div>
+
+        <!-- Product Form -->
+        <div class="admin-form-card" id="product-form-card" style="display:none;">
+          <h4 id="product-form-title">Add New Product</h4>
+          <form id="product-form" novalidate>
+            <input type="hidden" id="pf-id">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="pf-name">Product Name</label>
+                <input type="text" id="pf-name" class="form-control" placeholder="e.g. Kaju Katli" required>
+              </div>
+              <div class="form-group">
+                <label for="pf-price">Price (₹)</label>
+                <input type="number" id="pf-price" class="form-control" placeholder="0" min="0" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="pf-category">Category ID</label>
+                <input type="number" id="pf-category" class="form-control" placeholder="Category ID" required>
+              </div>
+              <div class="form-group">
+                <label for="pf-quantity">Quantity</label>
+                <input type="number" id="pf-quantity" class="form-control" placeholder="0" min="0" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="pf-photo">Photo URL</label>
+              <input type="text" id="pf-photo" class="form-control" placeholder="https://... or /path/to/image">
+            </div>
+            <div class="form-group">
+              <label for="pf-desc">Description</label>
+              <textarea id="pf-desc" class="form-control" rows="2" placeholder="Short description" required></textarea>
+            </div>
+            <div class="form-group">
+              <label>
+                <input type="checkbox" id="pf-available" checked> Available for sale
+              </label>
+            </div>
+            <div id="product-form-error" class="form-error"></div>
+            <div class="admin-form-actions">
+              <button type="submit" class="btn btn-primary" id="pf-submit-btn">Save Product</button>
+              <button type="button" class="btn btn-secondary" id="pf-cancel-btn">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Products Table -->
+        <div class="admin-table-wrap" id="products-table-wrap">
+          <div class="loading-spinner"><div class="spinner"></div></div>
+        </div>
+      </section>
+
+      <!-- Categories Section -->
+      <section class="admin-section" id="section-categories">
+        <div class="admin-toolbar">
+          <h3>All Categories</h3>
+          <button class="btn btn-primary btn-sm" id="btn-add-category">+ Add Category</button>
+        </div>
+
+        <!-- Category Form -->
+        <div class="admin-form-card" id="category-form-card" style="display:none;">
+          <h4 id="category-form-title">Add New Category</h4>
+          <form id="category-form" novalidate>
+            <input type="hidden" id="cf-id">
+            <div class="form-group">
+              <label for="cf-name">Category Name</label>
+              <input type="text" id="cf-name" class="form-control" placeholder="e.g. Ladoo" required>
+            </div>
+            <div id="category-form-error" class="form-error"></div>
+            <div class="admin-form-actions">
+              <button type="submit" class="btn btn-primary" id="cf-submit-btn">Save Category</button>
+              <button type="button" class="btn btn-secondary" id="cf-cancel-btn">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Categories Table -->
+        <div class="admin-table-wrap" id="categories-table-wrap">
+          <div class="loading-spinner"><div class="spinner"></div></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">Sweet<span>Mart</span></div>
+      <div class="footer-copy">&copy; 2025 SweetMart. Admin Panel.</div>
+    </div>
+  </footer>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="../assets/js/admin.js"></script>
+</body>
+</html>

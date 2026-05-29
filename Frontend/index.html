@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SweetMart — Premium Indian Sweets</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="site-logo">Sweet<span>Mart</span></a>
+      <nav class="nav-links">
+        <a href="index.html" class="active">Shop</a>
+        <a href="pages/orders.html">My Orders</a>
+      </nav>
+      <div class="header-right">
+        <span class="user-greeting" id="user-greeting"></span>
+        <a href="pages/cart.html" class="cart-link">
+          &#128722; Cart <span class="cart-badge" id="cart-badge"></span>
+        </a>
+        <a href="pages/login.html" class="btn btn-sm btn-primary" id="auth-btn">Sign In</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Page Header -->
+    <div class="container">
+      <div class="page-header">
+        <h1>Our Sweets Collection</h1>
+        <p>Handcrafted Indian confectionery made with the finest ingredients</p>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="container">
+      <div class="filter-bar">
+        <input
+          type="text"
+          class="search-input"
+          id="search-input"
+          placeholder="Search sweets..."
+          autocomplete="off"
+        >
+        <div class="category-filters" id="category-filters">
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="container">
+      <div class="product-grid" id="product-grid">
+        <div class="loading-spinner"><div class="spinner"></div></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">Sweet<span>Mart</span></div>
+      <div class="footer-links">
+        <a href="index.html">Shop</a>
+        <a href="pages/cart.html">Cart</a>
+        <a href="pages/orders.html">Orders</a>
+      </div>
+      <div class="footer-copy">&copy; 2025 SweetMart. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="assets/js/index.js"></script>
+</body>
+</html>

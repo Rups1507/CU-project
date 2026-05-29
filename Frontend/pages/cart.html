@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Cart — SweetMart</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="site-logo">Sweet<span>Mart</span></a>
+      <nav class="nav-links">
+        <a href="../index.html">Shop</a>
+        <a href="orders.html">My Orders</a>
+      </nav>
+      <div class="header-right">
+        <span class="user-greeting" id="user-greeting"></span>
+        <a href="cart.html" class="cart-link active">
+          &#128722; Cart <span class="cart-badge" id="cart-badge"></span>
+        </a>
+        <a href="login.html" class="btn btn-sm btn-primary" id="auth-btn">Sign In</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <div class="container">
+      <div class="page-header">
+        <h1>Your Cart</h1>
+        <p id="cart-count-text">0 items in your cart</p>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="cart-layout" id="cart-layout">
+        <!-- Cart Items Column -->
+        <div>
+          <div class="cart-items" id="cart-items">
+            <!-- Rendered by JS -->
+          </div>
+          <div class="mt-2" id="cart-actions" style="display:none;">
+            <button class="btn btn-secondary btn-sm" id="clear-cart-btn">Clear Cart</button>
+          </div>
+        </div>
+
+        <!-- Summary Column -->
+        <aside class="cart-summary" id="cart-summary" style="display:none;">
+          <h3>Order Summary</h3>
+          <div id="summary-rows"></div>
+          <div class="summary-row total">
+            <span>Total</span>
+            <span id="cart-total">&#8377;0</span>
+          </div>
+          <div class="mt-2">
+            <a href="checkout.html" class="btn btn-primary btn-block btn-lg">Proceed to Checkout</a>
+          </div>
+        </aside>
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="empty-cart" style="display:none;">
+        <div class="empty-state-icon">&#128722;</div>
+        <h3>Your cart is empty</h3>
+        <p>Browse our collection and add some delicious sweets!</p>
+        <a href="../index.html" class="btn btn-primary">Continue Shopping</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">Sweet<span>Mart</span></div>
+      <div class="footer-links">
+        <a href="../index.html">Shop</a>
+        <a href="cart.html">Cart</a>
+        <a href="orders.html">Orders</a>
+      </div>
+      <div class="footer-copy">&copy; 2025 SweetMart. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="../assets/js/cart.js"></script>
+</body>
+</html>

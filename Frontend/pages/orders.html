@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Orders — SweetMart</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="site-logo">Sweet<span>Mart</span></a>
+      <nav class="nav-links">
+        <a href="../index.html">Shop</a>
+        <a href="orders.html" class="active">My Orders</a>
+      </nav>
+      <div class="header-right">
+        <span class="user-greeting" id="user-greeting"></span>
+        <a href="cart.html" class="cart-link">
+          &#128722; Cart <span class="cart-badge" id="cart-badge"></span>
+        </a>
+        <a href="login.html" class="btn btn-sm btn-primary" id="auth-btn">Sign In</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <div class="container">
+      <div class="page-header">
+        <h1>My Orders</h1>
+        <p>Track and review your past orders</p>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Loading State -->
+      <div class="loading-spinner" id="orders-loading">
+        <div class="spinner"></div>
+      </div>
+
+      <!-- Orders List -->
+      <div class="orders-list" id="orders-list" style="display:none;"></div>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="empty-orders" style="display:none;">
+        <div class="empty-state-icon">&#128230;</div>
+        <h3>No orders yet</h3>
+        <p>Once you place an order, it will appear here.</p>
+        <a href="../index.html" class="btn btn-primary">Start Shopping</a>
+      </div>
+
+      <!-- Auth Required State -->
+      <div class="empty-state" id="auth-required" style="display:none;">
+        <div class="empty-state-icon">&#128274;</div>
+        <h3>Sign in to view orders</h3>
+        <p>You need to be logged in to see your order history.</p>
+        <a href="login.html?redirect=orders.html" class="btn btn-primary">Sign In</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">Sweet<span>Mart</span></div>
+      <div class="footer-links">
+        <a href="../index.html">Shop</a>
+        <a href="cart.html">Cart</a>
+        <a href="orders.html">Orders</a>
+      </div>
+      <div class="footer-copy">&copy; 2025 SweetMart. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="../assets/js/orders.js"></script>
+</body>
+</html>
